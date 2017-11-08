@@ -1,0 +1,28 @@
+#!/bin/bash
+#
+# CMS SCRAM Architecture Change Script
+# by Luigi Calligaris
+# Released under GNU GPLv3 license
+
+echo "Current value for \$SCRAM_ARCH:\"$SCRAM_ARCH\""
+
+AVAIL_ARCHS_SINGLESTRING=$(find /cvmfs/cms.cern.ch/ -maxdepth 1 -regextype posix-extended -regex "^/cvmfs/cms.cern.ch/(fc|slc).*" -exec basename {} \;)
+N_AVAIL_ARCHS=$(echo ${AVAIL_ARCHS_SINGLESTRING} | wc -w)
+AVAIL_ARCHS=($AVAIL_ARCHS_SINGLESTRING)
+
+#echo "AVAIL_ARCHS_SINGLESTRING=$AVAIL_ARCHS_SINGLESTRING"
+#echo "N_AVAIL_ARCHS=$N_AVAIL_ARCHS"
+#echo "AVAIL_ARCHS=$AVAIL_ARCHS"
+
+echo "Available architectures:"
+for ((i=0; i<N_AVAIL_ARCHS; i++))
+{
+  echo "$i) ${AVAIL_ARCHS[$i]}"
+}
+
+echo "Which architecture do you want to set?"
+read -r I_CHOSEN_ARCH
+
+echo "Switching to architecture ${I_CHOSEN_ARCH}: ${AVAIL_ARCHS[$I_CHOSEN_ARCH]}"
+export SCRAM_ARCH=${AVAIL_ARCHS[$I_CHOSEN_ARCH]}
+
